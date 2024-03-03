@@ -18,23 +18,31 @@ export const HomePlaylist = ({ videoList, onVideoClick }) => {
     newPlaylist.splice(index, 0, draggedItem);
     setPlaylist(newPlaylist);
   };
+
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {playlist.map((item, idx) => {
         return (
           <div
             key={idx}
-            className="relative cursor-pointer"
+            className="cursor-pointer"
             draggable
             onDragStart={(e) => handleDragStart(e, idx)}
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, idx)}
             onClick={() => onVideoClick(item.id)}
           >
-            <img className="rounded-lg" src={item.thumb} alt={item.title} />
-            <p className="text-xs xl:text-sm sm:bottom-1 md:bottom-0.5 xl:bottom-1.5 absolute right-2 text-white">
-              {item.duration}
-            </p>
+            <div className="relative">
+                <img className="rounded-lg" src={item.thumbnailUrl} alt={item.title} />
+                <p className="text-xs xl:text-sm sm:bottom-1 md:bottom-0.5 xl:bottom-1.5 absolute right-2 text-white">
+                {item.duration}
+                </p>
+            </div>
+            <div className="px-2">
+                <p className="text-lg font-bold line-clamp-2">{item.description}</p>
+                <p>{item.author}</p>
+                <p>{item.views} views</p>
+            </div>
           </div>
         );
       })}
