@@ -10,10 +10,11 @@ const getDuration = (duration) => {
 
 const VideoPlayer = ({ autoplay }) => {
   const { currentVideo } = useVideoContext();
-  const { videoUrl, duration, id } = currentVideo;
+  const { videoUrl, duration, id, ...rest } = currentVideo;
   const videoRef = useRef(null);
   const speedRef = useRef(1);
   const [currentTime, setCurrentTime] = useState(0);
+  const [volume, setVolume] = useState(1);
   const [displayTime, setDisplayTime] = useState("0:00");
   const [speed, setSpeed] = useState(1);
   const [totalTime] = useState(() => getDuration(duration));
@@ -49,6 +50,13 @@ const VideoPlayer = ({ autoplay }) => {
     video.currentTime = time;
   };
 
+  const handleVolumeChange = (e) => {
+    const video = videoRef.current;
+    const vol = parseFloat(e.target.value);
+    video.volume = vol;
+    setVolume(vol);
+  };
+
   const handlePlayPause = () => {
     const video = videoRef.current;
     if (video.paused) {
@@ -65,20 +73,19 @@ const VideoPlayer = ({ autoplay }) => {
           className="rounded-2xl"
           ref={videoRef}
           src={videoUrl}
-          //   autoPlay
+          autoPlay
           width="100%"
           height="100%"
           controls
-          muted
         />
         <div className="flex text-xs justify-between items-center mt-2 px-2">
           <button
-            className="w-1/12 bg-slate-300 rounded-md"
+            className=" bg-slate-300 rounded-md"
             onClick={handlePlayPause}
           >
             Play/Pause
           </button>
-          <div className="w-6/12 flex justify-between">
+          <div className=" flex justify-between">
             <p>{displayTime}</p>
             <input
               type="range"
@@ -89,6 +96,18 @@ const VideoPlayer = ({ autoplay }) => {
               className="w-11/12 mx-2 cursor-pointer"
             />
             <p>{duration}</p>
+          </div>
+          <div className="flex">
+            <label htmlFor="volume">Volume: </label>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              value={volume}
+              onChange={handleVolumeChange}
+              className="w-6/12 ml-1 cursor-pointer"
+            />
           </div>
           <div>
             <label htmlFor="speed">Playback speed: </label>
@@ -106,6 +125,11 @@ const VideoPlayer = ({ autoplay }) => {
               <option value={1.5}>1.5x</option>
             </select>
           </div>
+        </div>
+        <div className="pl-2 mt-4">
+          <p className="text-sm 2xl:text-lg font-bold">{rest.description}</p>
+          <p className="text-xs 2xl:text-base mt-2">{rest.author}</p>
+          <p className="text-xs 2xl:text-base mt-1">{rest.views} views</p>
         </div>
       </div>
       <SidePlaylist />
