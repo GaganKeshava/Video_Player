@@ -1,22 +1,17 @@
-import React, {useState} from "react";
+import React from "react";
+import { useVideoContext } from "../VideoContextProvider";
+import { handleDragOver, handleDragStart, handleDrop } from "../utils/Helper";
 
-export const HomePlaylist = ({ videoList, onVideoClick }) => {
-  const [playlist, setPlaylist] = useState(videoList);
+export const HomePlaylist = () => {
+  const { playlist, dispatch } = useVideoContext();
 
-  const handleDragStart = (e, index) => {
-    e.dataTransfer.setData("index", index);
-  };
+  const reorder = (e, idx) => {
+    const newPlaylist = handleDrop(e, idx, playlist);
+    dispatch({ type: "RE_ORDER", payload: newPlaylist });
+  }
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e, index) => {
-    const dragIndex = parseInt(e.dataTransfer.getData("index"));
-    const newPlaylist = [...playlist];
-    const [draggedItem] = newPlaylist.splice(dragIndex, 1);
-    newPlaylist.splice(index, 0, draggedItem);
-    setPlaylist(newPlaylist);
+  const handleClick = (e) => {
+    dispatch({ type: "CURRENT_VIDEO", payload: e });
   };
 
   return (
@@ -29,8 +24,8 @@ export const HomePlaylist = ({ videoList, onVideoClick }) => {
             draggable
             onDragStart={(e) => handleDragStart(e, idx)}
             onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, idx)}
-            onClick={() => onVideoClick(item.id)}
+            onDrop={(e) => reorder(e, idx)}
+            onClick={() => handleClick(item)}
           >
             <div className="relative sm:w-6/12 md:w-full">
                 <img className="rounded-lg" src={item.thumbnailUrl} alt={item.title} />

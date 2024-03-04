@@ -1,21 +1,31 @@
 import React from "react";
-import dummyData from "../assets/videos.json";
+import { useVideoContext } from "../VideoContextProvider";
+import { handleDragOver, handleDragStart, handleDrop } from "../utils/Helper";
 
 export const SidePlaylist = () => {
-  const videoList = dummyData.videos;
+  const { playlist, dispatch } = useVideoContext();
+  
+  const reorder = (e, idx) => {
+    const newPlaylist = handleDrop(e, idx, playlist);
+    dispatch({ type: "RE_ORDER", payload: newPlaylist });
+  }
+
+  const handleClick = (e) => {
+    dispatch({ type: "CURRENT_VIDEO", payload: e });
+  };
 
   return (
     <div className="grid sm:grid-rows-1 lg:w-4/12 gap-4 lg:pl-10 sm:mt-3 md:mt-5 lg:mt-0">
-      {videoList.map((item, idx) => {
+      {playlist.map((item, idx) => {
         return (
           <div
             key={idx}
             className="cursor-pointer flex"
             draggable
-            // onDragStart={(e) => handleDragStart(e, idx)}
-            // onDragOver={handleDragOver}
-            // onDrop={(e) => handleDrop(e, idx)}
-            // onClick={() => onVideoClick(item.id)}
+            onDragStart={(e) => handleDragStart(e, idx)}
+            onDragOver={handleDragOver}
+            onDrop={(e) => reorder(e, idx)}
+            onClick={() => handleClick(item)}
           >
             <div className="relative w-6/12">
               <img

@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { SidePlaylist } from "./SidePlaylist";
+import { useVideoContext } from "../VideoContextProvider";
 
 const getDuration = (duration) => {
   const splitTime = duration.split(":");
@@ -7,8 +8,9 @@ const getDuration = (duration) => {
   return parsedTime;
 };
 
-const VideoPlayer = ({ videoDetails, autoplay }) => {
-  const { videoUrl, duration, id } = videoDetails;
+const VideoPlayer = ({ autoplay }) => {
+  const { currentVideo } = useVideoContext();
+  const { videoUrl, duration, id } = currentVideo;
   const videoRef = useRef(null);
   const speedRef = useRef(1);
   const [currentTime, setCurrentTime] = useState(0);
@@ -28,7 +30,7 @@ const VideoPlayer = ({ videoDetails, autoplay }) => {
       setDisplayTime(formattedTime);
     });
     if (autoplay) {
-        video.play();
+      video.play();
     }
     return () => {
       video.removeEventListener("timeupdate", () => {});
