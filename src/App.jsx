@@ -1,7 +1,7 @@
 import React from "react";
 import { HomePlaylist } from "./scripts/HomePlaylist";
 import VideoPlayer from "./scripts/VideoPlayer";
-import { useVideoContext } from "./context/VideoContextProvider";
+import { useVideoContext } from "./VideoContextProvider";
 
 const App = () => {
   const { currentVideo } = useVideoContext();

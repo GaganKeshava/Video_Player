@@ -1,5 +1,5 @@
 import React from "react";
-import { useVideoContext } from "../context/VideoContextProvider";
+import { useVideoContext } from "../VideoContextProvider";
 import { handleDragOver, handleDragStart, handleDrop } from "../utils/Helper";
 
 export const SidePlaylist = () => {
