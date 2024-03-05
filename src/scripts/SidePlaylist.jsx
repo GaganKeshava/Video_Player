@@ -1,10 +1,11 @@
 import React from "react";
-import { useVideoContext } from "../VideoContextProvider";
+import { useVideoContext } from "../context/VideoContextProvider";
 import { handleDragOver, handleDragStart, handleDrop } from "../utils/Helper";
 
 export const SidePlaylist = () => {
-  const { playlist, dispatch } = useVideoContext();
-  
+  const { playlist, currentVideo, dispatch } = useVideoContext();
+  const { id } = currentVideo;
+
   const reorder = (e, idx) => {
     const newPlaylist = handleDrop(e, idx, playlist);
     dispatch({ type: "RE_ORDER", payload: newPlaylist });
@@ -20,7 +21,7 @@ export const SidePlaylist = () => {
         return (
           <div
             key={idx}
-            className="cursor-pointer flex"
+            className={`cursor-pointer flex rounded-lg ${item.id === id ? "bg-gray-300" : "bg-transparent"}`}
             draggable
             onDragStart={(e) => handleDragStart(e, idx)}
             onDragOver={handleDragOver}

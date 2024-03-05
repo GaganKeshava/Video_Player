@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { SidePlaylist } from "./SidePlaylist";
-import { useVideoContext } from "../VideoContextProvider";
+import { useVideoContext } from "../context/VideoContextProvider";
 
 const getDuration = (duration) => {
   const splitTime = duration.split(":");
@@ -17,8 +17,7 @@ const VideoPlayer = ({ autoplay }) => {
   const [volume, setVolume] = useState(1);
   const [displayTime, setDisplayTime] = useState("0:00");
   const [speed, setSpeed] = useState(1);
-  const [totalTime] = useState(() => getDuration(duration));
-
+  const [totalTime, setTotalTime] = useState(0);
   useEffect(() => {
     const video = videoRef.current;
     video.playbackRate = speed;
@@ -31,6 +30,7 @@ const VideoPlayer = ({ autoplay }) => {
       setDisplayTime(formattedTime);
     });
     if (autoplay) {
+      setTotalTime(getDuration(duration));
       video.play();
     }
     return () => {
@@ -79,52 +79,55 @@ const VideoPlayer = ({ autoplay }) => {
           controls
         />
         <div className="flex text-xs justify-between items-center mt-2 px-2">
-          <button
-            className=" bg-slate-300 rounded-md"
-            onClick={handlePlayPause}
-          >
-            Play/Pause
-          </button>
-          <div className=" flex justify-between">
-            <p>{displayTime}</p>
-            <input
-              type="range"
-              min={0}
-              max={totalTime}
-              value={currentTime}
-              onChange={handleSeek}
-              className="w-11/12 mx-2 cursor-pointer"
-            />
-            <p>{duration}</p>
+          <div>
+            <button
+              className="bg-slate-300 rounded-md p-1 mr-2"
+              onClick={handlePlayPause}
+            >
+              Play/Pause
+            </button>
+            {displayTime} / {duration}
           </div>
           <div className="flex">
-            <label htmlFor="volume">Volume: </label>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.1"
-              value={volume}
-              onChange={handleVolumeChange}
-              className="w-6/12 ml-1 cursor-pointer"
-            />
+            <div className="flex justify-center">
+              <label htmlFor="volume">Volume: </label>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={volume}
+                onChange={handleVolumeChange}
+                className="w-5/12 ml-1 cursor-pointer"
+              />
+            </div>
+            <div>
+              <label htmlFor="speed">Playback speed: </label>
+              <select
+                name="speed"
+                id="speed"
+                ref={speedRef}
+                value={speed}
+                onChange={handleSpeedChange}
+              >
+                <option value={0.5}>0.5x</option>
+                <option value={0.75}>0.75x</option>
+                <option value={1}>1x</option>
+                <option value={1.25}>1.25x</option>
+                <option value={1.5}>1.5x</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label htmlFor="speed">Playback speed: </label>
-            <select
-              name="speed"
-              id="speed"
-              ref={speedRef}
-              value={speed}
-              onChange={handleSpeedChange}
-            >
-              <option value={0.5}>0.5x</option>
-              <option value={0.75}>0.75x</option>
-              <option value={1}>1x</option>
-              <option value={1.25}>1.25x</option>
-              <option value={1.5}>1.5x</option>
-            </select>
-          </div>
+        </div>
+        <div className="px-2">
+          <input
+            type="range"
+            min={0}
+            max={totalTime}
+            value={currentTime}
+            onChange={handleSeek}
+            className="w-full cursor-pointer"
+          />
         </div>
         <div className="pl-2 mt-4">
           <p className="text-sm 2xl:text-lg font-bold">{rest.description}</p>
