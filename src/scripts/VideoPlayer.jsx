@@ -76,7 +76,6 @@ const VideoPlayer = ({ autoplay }) => {
           autoPlay
           width="100%"
           height="100%"
-          controls
         />
         <div className="flex text-xs justify-between items-center mt-2 px-2">
           <div>
