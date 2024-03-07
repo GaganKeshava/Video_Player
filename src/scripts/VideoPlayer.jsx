@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { SidePlaylist } from "./SidePlaylist";
-import { useVideoContext } from "../VideoContextProvider";
+import { useVideoContext } from "../context/VideoContextProvider";
 
 const getDuration = (duration) => {
   const splitTime = duration.split(":");
